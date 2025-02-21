@@ -1,82 +1,111 @@
+import React from "react";
 import "./App.css";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Dashboard from "./pages/Dashboard";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Layout from "./components/Layout";
+import Home from "./pages/Home";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
+import OurStore from "./pages/OurStore";
+import Blog from "./pages/Blog";
+import CompareProduct from "./pages/CompareProduct";
+import Wishlist from "./pages/Wishlist";
 import Login from "./pages/Login";
-
-import MainLayout from "./components/MainLayout";
-import Enquiries from "./pages/Enquiries";
-import Bloglist from "./pages/Bloglist";
-import Blogcatlist from "./pages/Blogcatlist";
-import Orders from "./pages/Orders";
-import Customers from "./pages/Customers";
-import Colorlist from "./pages/Colotlist";
-import Categorylist from "./pages/Categorylist";
-import Brandlist from "./pages/Brandlist";
-import Productlist from "./pages/Productlist";
-import Addblog from "./pages/Addblog";
-import Addblogcat from "./pages/Addblogcat";
-import Addcolor from "./pages/Addcolor";
-import Addcat from "./pages/Addcat";
-import Addbrand from "./pages/Addbrand";
-import Addproduct from "./pages/Addproduct";
-import Couponlist from "./pages/Couponlist";
-import AddCoupon from "./pages/AddCoupon";
-import ViewEnq from "./pages/ViewEnq";
-import ViewOrder from "./pages/ViewOrder";
-import { OpenRoutes } from "./routing/OpenRoutes";
+import Forgotpassword from "./pages/Forgotpassword";
+import Signup from "./pages/Signup";
+import Resetpassword from "./pages/Resetpassword";
+import SingleBlog from "./pages/SingleBlog";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import RefundPloicy from "./pages/RefundPloicy";
+import ShippingPolicy from "./pages/ShippingPolicy";
+import TermAndContions from "./pages/TermAndContions";
+import SingleProduct from "./pages/SingleProduct";
+import Cart from "./pages/Cart";
+import Checkout from "./pages/Checkout";
 import { PrivateRoutes } from "./routing/PrivateRoutes";
+import { OpenRoutes } from "./routing/OpenRoutes";
+import Orders from "./pages/Orders";
+import Profile from "./pages/Profile";
+
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <OpenRoutes>
-              <Login />
-            </OpenRoutes>
-          }
-        />
-        {/* <Route path="/reset-password" element={<Resetpassword />} />
-        <Route path="/forgot-password" element={<Forgotpassword />} /> */}
-        <Route
-          path="/admin"
-          element={
-            <PrivateRoutes>
-              <MainLayout />
-            </PrivateRoutes>
-          }
-        >
-          <Route index element={<Dashboard />} />
-          <Route path="enquiries" element={<Enquiries />} />
-          <Route path="enquiries/:id" element={<ViewEnq />} />
-          <Route path="blog-list" element={<Bloglist />} />
-          <Route path="blog" element={<Addblog />} />
-          <Route path="blog/:id" element={<Addblog />} />
-          <Route path="coupon-list" element={<Couponlist />} />
-          <Route path="coupon" element={<AddCoupon />} />
-          <Route path="coupon/:id" element={<AddCoupon />} />
-          <Route path="blog-category-list" element={<Blogcatlist />} />
-          <Route path="blog-category" element={<Addblogcat />} />
-          <Route path="blog-category/:id" element={<Addblogcat />} />
-          <Route path="orders" element={<Orders />} />
-          <Route path="order/:id" element={<ViewOrder />} />
-          <Route path="customers" element={<Customers />} />
-          <Route path="list-color" element={<Colorlist />} />
-          <Route path="color" element={<Addcolor />} />
-          <Route path="color/:id" element={<Addcolor />} />
-          <Route path="list-category" element={<Categorylist />} />
-          <Route path="category" element={<Addcat />} />
-          <Route path="category/:id" element={<Addcat />} />
-          <Route path="list-brand" element={<Brandlist />} />
-          <Route path="brand" element={<Addbrand />} />
-          <Route path="brand/:id" element={<Addbrand />} />
-          <Route path="list-product" element={<Productlist />} />
-          <Route path="product" element={<Addproduct />} />
-          <Route path="product/:id" element={<Addproduct />} />
-        </Route>
-      </Routes>
-    </Router>
+    <>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="about" element={<About />} />
+            <Route path="contact" element={<Contact />} />
+            <Route path="product" element={<OurStore />} />
+            <Route path="product/:id" element={<SingleProduct />} />
+            <Route path="blogs" element={<Blog />} />
+            <Route path="blog/:id" element={<SingleBlog />} />
+            <Route
+              path="cart"
+              element={
+                <PrivateRoutes>
+                  <Cart />
+                </PrivateRoutes>
+              }
+            />
+            <Route
+              path="my-orders"
+              element={
+                <PrivateRoutes>
+                  <Orders />
+                </PrivateRoutes>
+              }
+            />
+            <Route
+              path="my-profile"
+              element={
+                <PrivateRoutes>
+                  <Profile />
+                </PrivateRoutes>
+              }
+            />
+            <Route
+              path="checkout"
+              element={
+                <PrivateRoutes>
+                  <Checkout />
+                </PrivateRoutes>
+              }
+            />
+            <Route path="compare-product" element={<CompareProduct />} />
+            <Route
+              path="wishlist"
+              element={
+                <PrivateRoutes>
+                  <Wishlist />
+                </PrivateRoutes>
+              }
+            />
+            <Route
+              path="login"
+              element={
+                <OpenRoutes>
+                  <Login />
+                </OpenRoutes>
+              }
+            />
+            <Route path="forgot-password" element={<Forgotpassword />} />
+            <Route
+              path="signup"
+              element={
+                <OpenRoutes>
+                  <Signup />
+                </OpenRoutes>
+              }
+            />
+            <Route path="reset-password/:token" element={<Resetpassword />} />
+            <Route path="privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="refund-policy" element={<RefundPloicy />} />
+            <Route path="shipping-policy" element={<ShippingPolicy />} />
+            <Route path="term-conditions" element={<TermAndContions />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </>
   );
 }
 

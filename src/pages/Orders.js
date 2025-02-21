@@ -1,98 +1,129 @@
 import React, { useEffect } from "react";
-import { Table } from "antd";
+import Container from "../components/Container";
+import BreadCrumb from "../components/BreadCrumb";
 import { useDispatch, useSelector } from "react-redux";
-import { BiEdit } from "react-icons/bi";
-import { AiFillDelete } from "react-icons/ai";
-import { Link } from "react-router-dom";
-import { getOrders, updateAOrder } from "../features/auth/authSlice";
-const columns = [
-  {
-    title: "SNo",
-    dataIndex: "key",
-  },
-  {
-    title: "Name",
-    dataIndex: "name",
-  },
-  {
-    title: "Product",
-    dataIndex: "product",
-  },
-  {
-    title: "Amount",
-    dataIndex: "amount",
-  },
-  {
-    title: "Date",
-    dataIndex: "date",
-  },
-
-  {
-    title: "Action",
-    dataIndex: "action",
-  },
-];
+import { getOrders } from "../features/user/userSlice";
 
 const Orders = () => {
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(getOrders());
-  }, []);
-  const orderState = useSelector((state) => state?.auth?.orders.orders);
+  const orderState = useSelector(
+    (state) => state?.auth?.getorderedProduct?.orders
+  );
 
-  const data1 = [];
-  for (let i = 0; i < orderState?.length; i++) {
-    data1.push({
-      key: i + 1,
-      name: orderState[i]?.user?.firstname,
+  const getTokenFromLocalStorage = localStorage.getItem("customer")
+    ? JSON.parse(localStorage.getItem("customer"))
+    : null;
 
-      // product: orderState[i].products.map((i, j) => {
-      //   return (
-      //     <>
-      //       <ul>
-      //         <li>{i.product.title}</li>
-      //       </ul>
-      //     </>
-      //   );
-      // }),
-      product: (
-        <Link to={`/admin/order/${orderState[i]?._id}`}>View Orders</Link>
-      ),
-      amount: orderState[i]?.totalPrice,
-      date: new Date(orderState[i]?.createdAt).toLocaleString(),
-      action: (
-        <>
-          <select
-            name=""
-            defaultValue={orderState[i]?.orderStatus}
-            onChange={(e) =>
-              updateOrderStatus(orderState[i]?._id, e.target.value)
-            }
-            className="form-control form-select"
-            id=""
-          >
-            <option value="Ordered" disabled selected>
-              Ordered
-            </option>
-
-            <option value="Processed">Processed</option>
-            <option value="Shipped">Shipped</option>
-            <option value="Out for Delivery">Out for Delivery</option>
-            <option value="Delivered">Delivered</option>
-          </select>
-        </>
-      ),
-    });
-  }
-
-  const updateOrderStatus = (a, b) => {
-    dispatch(updateAOrder({ id: a, status: b }));
+  const config2 = {
+    headers: {
+      Authorization: `Bearer ${
+        getTokenFromLocalStorage !== null ? getTokenFromLocalStorage.token : ""
+      }`,
+      Accept: "application/json",
+    },
   };
+
+  useEffect(() => {
+    dispatch(getOrders(config2));
+  }, []);
   return (
-    <div>
-      <h3 className="mb-4 title">Orders</h3>
-      <div>{<Table columns={columns} dataSource={data1} />}</div>
-    </div>
+    <>
+      <BreadCrumb title="My Orders" />
+      <Container class1="cart-wrapper home-wrapper-2 py-5">
+        <div className="row">
+          <div className="col-12">
+            <div className="row">
+              <div className="col-3">
+                <h5>Order Id</h5>
+              </div>
+              <div className="col-3">
+                <h5>Total Amount</h5>
+              </div>
+              <div className="col-3">
+                <h5>Total Amount after Discount</h5>
+              </div>
+              <div className="col-3">
+                <h5>Status</h5>
+              </div>
+            </div>
+
+            <div className="col-12  mt-3">
+              {orderState &&
+                orderState?.map((item, index) => {
+                  return (
+                    <div
+                      style={{ backgroundColor: "#febd69" }}
+                      className="row pt-3 my-3"
+                      key={index}
+                    >
+                      <div className="col-3">
+                        <p>{item?._id}</p>
+                      </div>
+                      <div className="col-3">
+                        <p>{item?.totalPrice}</p>
+                      </div>
+                      <div className="col-3">
+                        <p>{item?.totalPriceAfterDiscount}</p>
+                      </div>
+                      <div className="col-3">
+                        <p>{item?.orderStatus}</p>
+                      </div>
+                      <div className="col-12">
+                        <div
+                          className="row py-3"
+                          style={{ backgroundColor: "#232f3e" }}
+                        >
+                          <div className="col-3">
+                            <h6 className="text-white">ProductName</h6>
+                          </div>
+                          <div className="col-3">
+                            <h6 className="text-white">Quantity</h6>
+                          </div>
+                          <div className="col-3">
+                            <h6 className="text-white">Price</h6>
+                          </div>
+                          <div className="col-3">
+                            <h6 className="text-white">Color</h6>
+                          </div>
+                          {item?.orderItems?.map((i, index) => {
+                            return (
+                              <div className="col-12">
+                                <div className="row py-3">
+                                  <div className="col-3">
+                                    <p className="text-white">
+                                      {i?.product?.title}
+                                    </p>
+                                  </div>
+                                  <div className="col-3">
+                                    <p className="text-white">{i?.quantity}</p>
+                                  </div>
+                                  <div className="col-3">
+                                    <p className="text-white">{i?.price}</p>
+                                  </div>
+                                  <div className="col-3">
+                                    <ul className="colors ps-0">
+                                      <li
+                                        style={{
+                                          backgroundColor: i?.color.title,
+                                        }}
+                                      ></li>
+                                    </ul>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+            </div>
+          </div>
+        </div>
+      </Container>
+      .
+    </>
   );
 };
 
